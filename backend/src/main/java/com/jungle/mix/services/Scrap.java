@@ -50,7 +50,22 @@ public class Scrap {
 						"//*[@id=\"__next\"]/main/div[2]/div/div[2]/div[1]/div[1]/div/div[2]/div/div[1]/div[2]/h2"))
 				.getText();
 
-		System.out.println("Home team: " + homeTeam);
+		List<List<WebElement>> list = new ArrayList<>();
+
+		List<WebElement> firstData = driver
+				.findElements(By.xpath("//*[@id=\"__next\"]/main/div[2]/div/div[2]/div[2]/div[6]/div/div/p[2]"));
+
+		String data = null;
+
+		list.add(firstData);
+		for (List<WebElement> x : list) {
+			if (!x.isEmpty()) {
+				data = x.get(0).getText();
+			}
+		}
+
+		list.clear();
+		System.out.println(data);
 
 		WebElement showMoreBtn = null;
 		boolean buttonFound = false;
@@ -81,6 +96,34 @@ public class Scrap {
 		waitForIt(15000);
 		new Actions(driver).click(showMoreBtn).perform();
 
+//Achando Oponente		
+
+		waitForIt(3000);
+		list.clear();
+
+		String opponentText = null;
+
+		List<WebElement> firstOpp = driver
+				.findElements(By.xpath("//*[@id=\"__next\"]/main/div[2]/div[1]/div/div/div[1]/div[1]/bdi"));
+
+		list.add(firstOpp);
+		for (List<WebElement> x : list) {
+			if (!x.isEmpty()) {
+				opponentText = x.get(0).getText();
+			}
+		}
+
+		String[] opponentWords = opponentText.split("-");
+		String opponent, team = "";
+
+		if (opponentWords[0].substring(0, opponentWords[0].length() - 1).equals(name)) {
+			opponent = opponentWords[1].substring(1);
+			team = opponentWords[0].substring(0, opponentWords[0].length() - 1);
+		} else {
+			opponent = opponentWords[0].substring(0, opponentWords[0].length() - 1);
+			team = opponentWords[1].substring(1);
+		}
+
 		// abaixar a tela
 		waitForIt(15000);
 		for (int i = 0; i < 20; i++) {
@@ -93,7 +136,6 @@ public class Scrap {
 
 		String texto = "Não existem estatísticas para a próxima partida do " + homeTeam;
 
-		List<List<WebElement>> list = new ArrayList<>();
 		waitForIt(10000);
 
 		List<WebElement> first = driver
@@ -136,26 +178,7 @@ public class Scrap {
 			}
 		}
 
-		String data = null;
-
-		list.clear();
-
-		List<WebElement> firstData = driver.findElements(By
-				.xpath("//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[1]/div[12]/div[1]/div[2]/div/div[1]/div[1]"));
-		List<WebElement> secondData = driver.findElements(By
-				.xpath("//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[1]/div[11]/div[1]/div[2]/div/div[1]/div[1]"));
-
-		list.add(firstData);
-		list.add(secondData);
-		for (List<WebElement> x : list) {
-			if (!x.isEmpty()) {
-				data = x.get(0).getText();
-			}
-		}
-
-		System.out.println(texto);
-		System.out.println(competi);
-		System.out.println(data);
+		System.out.println(generateMatchSummary(texto, opponent, team, competi));
 		driver.quit();
 	}
 
@@ -180,4 +203,27 @@ public class Scrap {
 		normalized = pattern.matcher(normalized).replaceAll("").toLowerCase();
 		return normalized.replace("-", " "); // Substitua '-' por espaço para consistência
 	}
+
+	public static String generateMatchSummary(String texto, String opponent, String team, String competi) {
+		String[] textoWords = texto.split("\\s+");
+		int n = 16;
+		String odd = textoWords[n];
+		while (!odd.contains("%")) {
+			odd = textoWords[n];
+			n++;
+		}
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("O ");
+		sb.append(team);
+		sb.append(" tem ");
+		sb.append(odd);
+		sb.append(" de chance de vencer o ");
+		sb.append(opponent);
+		sb.append(" na próxima partida da competição: ");
+		sb.append(competi);
+
+		return sb.toString();
+	}
+
 }

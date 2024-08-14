@@ -17,16 +17,17 @@ public class MixApplication {
 
 		Scrap scrapClub = new Scrap();
 
+		// Scrap do Brasileirão
 		ReadClubs timesBrasileirao = new ReadClubs();
 		String filePath = "C:\\Users\\Kleuber\\Desktop\\TimesBrasileirao.txt";
 		timesBrasileirao.lerArquivo(filePath);
 
 		// Impressão dos resultados
-		 ArrayList<String> timesENumeros = timesBrasileirao.getTimesENumeros();
-		 for (String timeNumero : timesENumeros) {
-		 scrapClub.scrap("https://www.sofascore.com/team/football/" + timeNumero);
-		 }
-
-		//scrapClub.scrap("https://www.sofascore.com/team/football/vasco-da-gama/1974");
+		ArrayList<String> timesENumeros = timesBrasileirao.getTimesENumeros();
+		for (String timeNumero : timesENumeros) {
+			scrapClub.scrap("https://www.sofascore.com/team/football/" + timeNumero);
+		}
+		// Exemplo para ver um time apenas
+		// scrapClub.scrap("https://www.sofascore.com/team/football/red-bull-bragantino/1999");
 	}
 }
