@@ -19,7 +19,9 @@ public class MixApplication {
 
 		// Scrap do Brasileirão
 		ReadClubs timesBrasileirao = new ReadClubs();
-		String filePath = "C:\\Users\\Kleuber\\Desktop\\TimesBrasileirao.txt";
+
+		// Use ClassLoader para obter o caminho correto do arquivo dentro de resources
+		String filePath = MixApplication.class.getClassLoader().getResource("TimesBrasileirao.txt").getPath();
 		timesBrasileirao.lerArquivo(filePath);
 
 		// Impressão dos resultados
@@ -28,6 +30,6 @@ public class MixApplication {
 			scrapClub.scrap("https://www.sofascore.com/team/football/" + timeNumero);
 		}
 		// Exemplo para ver um time apenas
-		// scrapClub.scrap("https://www.sofascore.com/team/football/red-bull-bragantino/1999");
+		scrapClub.scrap("https://www.sofascore.com/team/football/vasco-da-gama/1974");
 	}
 }

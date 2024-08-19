@@ -50,40 +50,23 @@ public class Scrap {
 						"//*[@id=\"__next\"]/main/div[2]/div/div[2]/div[1]/div[1]/div/div[2]/div/div[1]/div[2]/h2"))
 				.getText();
 
-		List<List<WebElement>> list = new ArrayList<>();
-
-		List<WebElement> firstData = driver
-				.findElements(By.xpath("//*[@id=\"__next\"]/main/div[2]/div/div[2]/div[2]/div[6]/div/div/p[2]"));
-
-		String data = null;
-
-		list.add(firstData);
-		for (List<WebElement> x : list) {
-			if (!x.isEmpty()) {
-				data = x.get(0).getText();
-			}
-		}
-
-		list.clear();
-		System.out.println(data);
-
 		WebElement showMoreBtn = null;
 		boolean buttonFound = false;
 		int attempts = 0;
 
-		while (!buttonFound && attempts < 3) {
+		while (!buttonFound && attempts < 12) {
 			try {
 				showMoreBtn = driver.findElement(By.xpath(
 						"//*[@id='__next']/main/div[2]/div/div[2]/div[1]/div[3]/div/div[2]/div[2]/div/div[1]/div/div/a/button"));
 				buttonFound = true;
 			} catch (NoSuchElementException e) {
 				attempts++;
-				if (attempts == 3) {
-					System.out.println("Botão 'Show More' não encontrado após 3 tentativas.");
+				if (attempts == 12) {
+					System.out.println("Botão 'Show More' não encontrado após 6 tentativas " + homeTeam);
 					driver.quit();
 					return;
 				}
-				waitForIt(5000); // Espera 5 segundos antes de tentar novamente
+				waitForIt(2000); // Espera 5 segundos antes de tentar novamente
 			}
 		}
 
@@ -99,19 +82,30 @@ public class Scrap {
 //Achando Oponente		
 
 		waitForIt(3000);
-		list.clear();
 
 		String opponentText = null;
 
-		List<WebElement> firstOpp = driver
-				.findElements(By.xpath("//*[@id=\"__next\"]/main/div[2]/div[1]/div/div/div[1]/div[1]/bdi"));
+		WebElement firstOpp = null;
+		buttonFound = false;
+		attempts = 0;
 
-		list.add(firstOpp);
-		for (List<WebElement> x : list) {
-			if (!x.isEmpty()) {
-				opponentText = x.get(0).getText();
+		while (!buttonFound && attempts < 3) {
+			try {
+				firstOpp = driver
+						.findElement(By.xpath("//*[@id=\"__next\"]/main/div[2]/div[1]/div/div/div[1]/div[1]/bdi"));
+				buttonFound = true;
+			} catch (NoSuchElementException e) {
+				attempts++;
+				if (attempts == 3) {
+					System.out.println("Texto não encontrado após 3 tentativas.");
+					driver.quit();
+					return;
+				}
+				waitForIt(5000); // Espera 5 segundos antes de tentar novamente
 			}
 		}
+
+		opponentText = firstOpp.getText();
 
 		String[] opponentWords = opponentText.split("-");
 		String opponent, team = "";
@@ -138,6 +132,7 @@ public class Scrap {
 
 		waitForIt(10000);
 
+		List<List<WebElement>> list = new ArrayList<>();
 		List<WebElement> first = driver
 				.findElements(By.xpath("//*[@id='__next']/main/div[2]/div[2]/div[1]/div[2]/div[5]/div/div[2]/div[2]"));
 		List<WebElement> second = driver
@@ -177,8 +172,12 @@ public class Scrap {
 				competi = x.get(0).getText();
 			}
 		}
-
-		System.out.println(generateMatchSummary(texto, opponent, team, competi));
+		try {
+			System.out.println(generateMatchSummary(texto, opponent, team, competi));
+		} catch (IllegalArgumentException e) {
+			driver.quit();
+			return;
+		}
 		driver.quit();
 	}
 
@@ -206,11 +205,23 @@ public class Scrap {
 
 	public static String generateMatchSummary(String texto, String opponent, String team, String competi) {
 		String[] textoWords = texto.split("\\s+");
+
+		// Verifique se o array é longo o suficiente
+		if (textoWords.length < 17) {
+			throw new IllegalArgumentException("O texto fornecido não contém palavras suficientes para processar.");
+		}
+
 		int n = 16;
 		String odd = textoWords[n];
+
+		// Use um loop para encontrar o primeiro elemento que contém o símbolo "%"
 		while (!odd.contains("%")) {
-			odd = textoWords[n];
 			n++;
+			if (n >= textoWords.length) {
+				throw new IllegalArgumentException("Não foi possível encontrar uma odd no texto fornecido.");
+
+			}
+			odd = textoWords[n];
 		}
 
 		StringBuilder sb = new StringBuilder();
