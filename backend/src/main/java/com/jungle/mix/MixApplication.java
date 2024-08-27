@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.jungle.mix.services.ReadClubs;
+import com.jungle.mix.services.ReadAndWrite;
 import com.jungle.mix.services.Scrap;
 
 @SpringBootApplication
@@ -18,18 +18,31 @@ public class MixApplication {
 		Scrap scrapClub = new Scrap();
 
 		// Scrap do Brasileirão
-		ReadClubs timesBrasileirao = new ReadClubs();
+		ReadAndWrite timesBrasileirao = new ReadAndWrite();
 
-		// Use ClassLoader para obter o caminho correto do arquivo dentro de resources
 		String filePath = MixApplication.class.getClassLoader().getResource("TimesBrasileirao.txt").getPath();
-		timesBrasileirao.lerArquivo(filePath);
+		timesBrasileirao.read(filePath);
 
 		// Impressão dos resultados
 		ArrayList<String> timesENumeros = timesBrasileirao.getTimesENumeros();
 		for (String timeNumero : timesENumeros) {
 			scrapClub.scrap("https://www.sofascore.com/team/football/" + timeNumero);
+			if (scrapClub.getSummary() != null)
+				timesBrasileirao.write(scrapClub.getSummary());
+		}
+
+		while (scrapClub.getErrors().size() > 0) {
+			for (int i = 0; i < scrapClub.getErrors().size(); i++) {
+				System.out.println(scrapClub.getErrors().get(i));
+				scrapClub.scrap(scrapClub.getErrors().get(i));
+				timesBrasileirao.write(scrapClub.getSummary());
+				if (scrapClub.getSuccess()) {
+					scrapClub.getErrors().remove(i);
+					System.out.println("Removido!");
+				}
+			}
 		}
 		// Exemplo para ver um time apenas
-		scrapClub.scrap("https://www.sofascore.com/team/football/vasco-da-gama/1974");
+		// scrapClub.scrap("https://www.sofascore.com/team/football/vitoria/1962");
 	}
 }

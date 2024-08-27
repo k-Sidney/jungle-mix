@@ -19,6 +19,34 @@ import org.springframework.stereotype.Service;
 @Service
 public class Scrap {
 
+	String summary = null;
+	List<String> errors = new ArrayList<>();
+	Boolean success = false;
+
+	public Boolean getSuccess() {
+		return success;
+	}
+
+	public void setSuccess(Boolean success) {
+		this.success = success;
+	}
+
+	public List<String> getErrors() {
+		return errors;
+	}
+
+	public void setErrors(List<String> errors) {
+		this.errors = errors;
+	}
+
+	public String getSummary() {
+		return summary;
+	}
+
+	public void setSummary(String summary) {
+		this.summary = summary;
+	}
+
 	public void scrap(String url) {
 
 		System.setProperty("webdriver.chrome", "/mix/src/main/resources/chrome.exe");
@@ -50,6 +78,8 @@ public class Scrap {
 						"//*[@id=\"__next\"]/main/div[2]/div/div[2]/div[1]/div[1]/div/div[2]/div/div[1]/div[2]/h2"))
 				.getText();
 
+		summary = "Não existem estatisitcas para a próxima partida do " + name;
+
 		WebElement showMoreBtn = null;
 		boolean buttonFound = false;
 		int attempts = 0;
@@ -62,7 +92,11 @@ public class Scrap {
 			} catch (NoSuchElementException e) {
 				attempts++;
 				if (attempts == 12) {
-					System.out.println("Botão 'Show More' não encontrado após 6 tentativas " + homeTeam);
+					System.out.println("Botão 'Show More' não encontrado após 12 tentativas " + homeTeam);
+					summary = null;
+					System.out.println(driver.getCurrentUrl());
+					errors.add(driver.getCurrentUrl());
+					success = false;
 					driver.quit();
 					return;
 				}
@@ -128,7 +162,7 @@ public class Scrap {
 
 		// Imprimindo o texto do time que esta no link
 
-		String texto = "Não existem estatísticas para a próxima partida do " + homeTeam;
+		String texto = "Não existem estatísticas para a próxima partida do " + name;
 
 		waitForIt(10000);
 
@@ -174,10 +208,14 @@ public class Scrap {
 		}
 		try {
 			System.out.println(generateMatchSummary(texto, opponent, team, competi));
+			summary = generateMatchSummary(texto, opponent, team, competi);
+			success = true;
 		} catch (IllegalArgumentException e) {
+			System.out.println(texto);
 			driver.quit();
 			return;
 		}
+
 		driver.quit();
 	}
 
@@ -206,7 +244,6 @@ public class Scrap {
 	public static String generateMatchSummary(String texto, String opponent, String team, String competi) {
 		String[] textoWords = texto.split("\\s+");
 
-		// Verifique se o array é longo o suficiente
 		if (textoWords.length < 17) {
 			throw new IllegalArgumentException("O texto fornecido não contém palavras suficientes para processar.");
 		}
@@ -214,7 +251,6 @@ public class Scrap {
 		int n = 16;
 		String odd = textoWords[n];
 
-		// Use um loop para encontrar o primeiro elemento que contém o símbolo "%"
 		while (!odd.contains("%")) {
 			n++;
 			if (n >= textoWords.length) {
