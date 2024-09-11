@@ -43,6 +43,6 @@ public class MixApplication {
 			}
 		}
 		// Exemplo para ver um time apenas
-		// scrapClub.scrap("https://www.sofascore.com/team/football/vitoria/1962");
+		//scrapClub.scrap("https://www.sofascore.com/team/football/vitoria/1962");
 	}
 }
