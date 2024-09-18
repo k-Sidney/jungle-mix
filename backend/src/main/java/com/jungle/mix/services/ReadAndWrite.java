@@ -30,9 +30,15 @@ public class ReadAndWrite {
 	}
 
 	public void write(String summary) {
+
+		if (summary == null || summary.isEmpty()) {
+			System.out.println("O resumo é nulo ou vazio, nada será escrito.");
+			return; // Saia do método se a string for nula ou vazia
+		}
+
 		try {
 			// Caminho relativo para a pasta resources no diretório de execução
-			String directoryPath = new File("resources").getAbsolutePath();
+			String directoryPath = new File("results").getAbsolutePath();
 			File directory = new File(directoryPath);
 
 			// Se a pasta não existir, cria
