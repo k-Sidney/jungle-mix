@@ -1,4 +1,4 @@
-package com.jungle.mix.services;
+package com.jungle.mix.scraper;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

@@ -1,4 +1,4 @@
-package com.jungle.mix.services;
+package com.jungle.mix.scraper;
 
 import java.text.Normalizer;
 import java.util.ArrayList;

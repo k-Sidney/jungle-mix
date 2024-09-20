@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.jungle.mix.services.ReadAndWrite;
-import com.jungle.mix.services.Scrap;
+import com.jungle.mix.scraper.ReadAndWrite;
+import com.jungle.mix.scraper.Scrap;
 
 @SpringBootApplication
 public class MixApplication {
@@ -19,6 +19,7 @@ public class MixApplication {
 		
 		Scrap scrapClub = new Scrap();
 
+		/*
 		// Scrap do Brasileirão
 		ReadAndWrite timesBrasileirao = new ReadAndWrite();
 
@@ -44,7 +45,9 @@ public class MixApplication {
 				}
 			}
 		}
+		
+		*/
 		// Exemplo para ver um time apenas
-		//scrapClub.scrap("https://www.sofascore.com/team/football/vitoria/1962");
+		scrapClub.scrap("https://www.sofascore.com/team/football/vitoria/1962");
 	}
 }
