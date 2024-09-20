@@ -15,6 +15,8 @@ public class MixApplication {
 	public static void main(String[] args) throws IOException {
 		SpringApplication.run(MixApplication.class, args);
 
+		
+		
 		Scrap scrapClub = new Scrap();
 
 		// Scrap do Brasileirão
