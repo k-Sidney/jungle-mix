@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jungle.mix.entities.League;
+import com.jungle.mix.dto.LeagueDTO;
 import com.jungle.mix.services.LeagueService;
 
 @RestController
@@ -19,8 +19,8 @@ public class LeagueResource {
 	private LeagueService service;
 
 	@GetMapping
-	public ResponseEntity<List<League>> findAll() {
-		List<League> list = service.findAll();
+	public ResponseEntity<List<LeagueDTO>> findAll() {
+		List<LeagueDTO> list = service.findAll();
 		return ResponseEntity.ok().body(list);
 	}
 
