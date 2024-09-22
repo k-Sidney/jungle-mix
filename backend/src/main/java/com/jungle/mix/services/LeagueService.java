@@ -30,4 +30,12 @@ public class LeagueService {
 		Optional<League> obj = repository.findById(id);
 		return new LeagueDTO(obj.orElseThrow(() -> new EntityNotFoundException("Entity not found")));
 	}
+
+	@Transactional
+	public LeagueDTO insert(LeagueDTO dto) {
+		League entity = new League();
+		entity.setName(dto.getName());
+		entity = repository.save(entity);
+		return new LeagueDTO(entity);
+	}
 }
