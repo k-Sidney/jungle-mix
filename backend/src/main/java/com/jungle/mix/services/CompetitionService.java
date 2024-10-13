@@ -10,47 +10,47 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.jungle.mix.dto.LeagueDTO;
-import com.jungle.mix.entities.League;
-import com.jungle.mix.repositories.LeagueRepository;
+import com.jungle.mix.dto.CompetitionDTO;
+import com.jungle.mix.entities.Competition;
+import com.jungle.mix.repositories.CompetitionRepository;
 import com.jungle.mix.services.exceptions.DatabaseException;
 import com.jungle.mix.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
-public class LeagueService {
+public class CompetitionService {
 
 	@Autowired
-	private LeagueRepository repository;
+	private CompetitionRepository repository;
 
 	@Transactional(readOnly = true)
-	public Page<LeagueDTO> findAllPaged(PageRequest pageRequest) {
-		return repository.findAll(pageRequest).map(x -> new LeagueDTO(x));
+	public Page<CompetitionDTO> findAllPaged(PageRequest pageRequest) {
+		return repository.findAll(pageRequest).map(x -> new CompetitionDTO(x));
 
 	}
 
 	@Transactional(readOnly = true)
-	public LeagueDTO findById(Long id) {
-		Optional<League> obj = repository.findById(id);
-		return new LeagueDTO(obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found")));
+	public CompetitionDTO findById(Long id) {
+		Optional<Competition> obj = repository.findById(id);
+		return new CompetitionDTO(obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found")));
 	}
 
 	@Transactional
-	public LeagueDTO insert(LeagueDTO dto) {
-		League entity = new League();
+	public CompetitionDTO insert(CompetitionDTO dto) {
+		Competition entity = new Competition();
 		entity.setName(dto.getName());
 		entity = repository.save(entity);
-		return new LeagueDTO(entity);
+		return new CompetitionDTO(entity);
 	}
 
 	@Transactional
-	public LeagueDTO update(Long id, LeagueDTO dto) {
+	public CompetitionDTO update(Long id, CompetitionDTO dto) {
 		try {
-			League entity = repository.getReferenceById(id);
+			Competition entity = repository.getReferenceById(id);
 			entity.setName(dto.getName());
 			entity = repository.save(entity);
-			return new LeagueDTO(entity);
+			return new CompetitionDTO(entity);
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("Id " + id + " not found");
 		}

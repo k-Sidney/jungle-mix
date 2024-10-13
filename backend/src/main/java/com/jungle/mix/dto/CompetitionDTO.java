@@ -2,23 +2,23 @@ package com.jungle.mix.dto;
 
 import java.io.Serializable;
 
-import com.jungle.mix.entities.League;
+import com.jungle.mix.entities.Competition;
 
-public class LeagueDTO implements Serializable {
+public class CompetitionDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	private Long id;
 	private String name;
 
-	public LeagueDTO() {
+	public CompetitionDTO() {
 	}
 
-	public LeagueDTO(Long id, String name) {
+	public CompetitionDTO(Long id, String name) {
 		this.id = id;
 		this.name = name;
 	}
 
-	public LeagueDTO(League entity) {
+	public CompetitionDTO(Competition entity) {
 		this.id = entity.getId();
 		this.name = entity.getName();
 	}

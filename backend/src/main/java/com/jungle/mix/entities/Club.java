@@ -1,21 +1,22 @@
 package com.jungle.mix.entities;
 
 import java.io.Serializable;
-import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "tb_league")
-public class League implements Serializable {
+@Table(name = "tb_club")
+public class Club implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -23,16 +24,15 @@ public class League implements Serializable {
 	private Long id;
 	private String name;
 
-	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
-	private Instant createdAt;
+	@ManyToMany
+	@JoinTable(name = "tb_club_competition", joinColumns = @JoinColumn(name = "club_id"), inverseJoinColumns = @JoinColumn(name = "competition_id"))
+	Set<Competition> competitions = new HashSet<>();
 
-	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
-	private Instant updatedAt;
-
-	public League() {
+	public Club() {
 	}
 
-	public League(Long id, String name) {
+	public Club(Long id, String name) {
+		super();
 		this.id = id;
 		this.name = name;
 	}
@@ -53,22 +53,8 @@ public class League implements Serializable {
 		this.name = name;
 	}
 
-	public Instant getCreatedAt() {
-		return createdAt;
-	}
-
-	public Instant getUpdatedAt() {
-		return updatedAt;
-	}
-
-	@PrePersist
-	public void prePersist() {
-		createdAt = Instant.now();
-	}
-
-	@PreUpdate
-	public void preUpdate() {
-		updatedAt = Instant.now();
+	public Set<Competition> getCompetitions() {
+		return competitions;
 	}
 
 	@Override
@@ -84,7 +70,7 @@ public class League implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		League other = (League) obj;
+		Club other = (Club) obj;
 		return Objects.equals(id, other.id);
 	}
 

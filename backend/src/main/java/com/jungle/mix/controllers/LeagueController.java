@@ -18,43 +18,42 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.jungle.mix.dto.LeagueDTO;
-import com.jungle.mix.services.LeagueService;
+import com.jungle.mix.dto.CompetitionDTO;
+import com.jungle.mix.services.CompetitionService;
 
 @RestController
 @RequestMapping(value = "/leagues")
 public class LeagueController {
 
 	@Autowired
-	private LeagueService service;
+	private CompetitionService service;
 
 	@GetMapping
-	public ResponseEntity<Page<LeagueDTO>> findAll(@RequestParam(defaultValue = "0") Integer page,
+	public ResponseEntity<Page<CompetitionDTO>> findAll(@RequestParam(defaultValue = "0") Integer page,
 			@RequestParam(defaultValue = "12") Integer linesPerPage,
-			@RequestParam(defaultValue = "name") String orderBy,
-			@RequestParam(defaultValue = "ASC") String direction) {
+			@RequestParam(defaultValue = "name") String orderBy, @RequestParam(defaultValue = "ASC") String direction) {
 
 		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
 
-		Page<LeagueDTO> list = service.findAllPaged(pageRequest);
+		Page<CompetitionDTO> list = service.findAllPaged(pageRequest);
 		return ResponseEntity.ok().body(list);
 	}
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<LeagueDTO> findById(@PathVariable Long id) {
-		LeagueDTO dto = service.findById(id);
+	public ResponseEntity<CompetitionDTO> findById(@PathVariable Long id) {
+		CompetitionDTO dto = service.findById(id);
 		return ResponseEntity.ok().body(dto);
 	}
 
 	@PostMapping
-	public ResponseEntity<LeagueDTO> insert(@RequestBody LeagueDTO dto) {
+	public ResponseEntity<CompetitionDTO> insert(@RequestBody CompetitionDTO dto) {
 		dto = service.insert(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
 		return ResponseEntity.created(uri).body(dto);
 	}
 
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<LeagueDTO> update(@PathVariable Long id, @RequestBody LeagueDTO dto) {
+	public ResponseEntity<CompetitionDTO> update(@PathVariable Long id, @RequestBody CompetitionDTO dto) {
 		dto = service.update(id, dto);
 		return ResponseEntity.ok().body(dto);
 	}
