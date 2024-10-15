@@ -11,8 +11,11 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.jungle.mix.dto.ClubDTO;
+import com.jungle.mix.dto.CompetitionDTO;
 import com.jungle.mix.entities.Club;
+import com.jungle.mix.entities.Competition;
 import com.jungle.mix.repositories.ClubRepository;
+import com.jungle.mix.repositories.CompetitionRepository;
 import com.jungle.mix.services.exceptions.DatabaseException;
 import com.jungle.mix.services.exceptions.ResourceNotFoundException;
 
@@ -23,6 +26,9 @@ public class ClubService {
 
 	@Autowired
 	private ClubRepository repository;
+
+	@Autowired
+	private CompetitionRepository competitionRepository;
 
 	@Transactional(readOnly = true)
 	public Page<ClubDTO> findAllPaged(PageRequest pageRequest) {
@@ -40,7 +46,7 @@ public class ClubService {
 	@Transactional
 	public ClubDTO insert(ClubDTO dto) {
 		Club entity = new Club();
-		entity.setName(dto.getName());
+		copyDtoToEntity(dto, entity);
 		entity = repository.save(entity);
 		return new ClubDTO(entity);
 	}
@@ -49,7 +55,7 @@ public class ClubService {
 	public ClubDTO update(Long id, ClubDTO dto) {
 		try {
 			Club entity = repository.getReferenceById(id);
-			entity.setName(dto.getName());
+			copyDtoToEntity(dto, entity);
 			entity = repository.save(entity);
 			return new ClubDTO(entity);
 		} catch (EntityNotFoundException e) {
@@ -67,5 +73,14 @@ public class ClubService {
 			throw new DatabaseException("Integrity failure");
 		}
 
+	}
+
+	private void copyDtoToEntity(ClubDTO dto, Club entity) {
+		entity.setName(dto.getName());
+		entity.getCompetitions().clear();
+		for (CompetitionDTO compDto : dto.getCompetitions()) {
+			Competition competition = competitionRepository.getReferenceById(compDto.getId());
+			entity.getCompetitions().add(competition);
+		}
 	}
 }
