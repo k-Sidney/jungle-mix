@@ -20,7 +20,7 @@ import com.jungle.mix.dto.CompetitionDTO;
 import com.jungle.mix.services.CompetitionService;
 
 @RestController
-@RequestMapping(value = "/leagues")
+@RequestMapping(value = "/competitions")
 public class CompetitionController {
 
 	@Autowired
