@@ -14,9 +14,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
-import org.springframework.stereotype.Service;
 
-@Service
+
 public class Scrap {
 
 	String summary = null;
@@ -75,7 +74,7 @@ public class Scrap {
 
 		String name = driver
 				.findElement(By.xpath(
-						"//*[@id=\"__next\"]/main/div[2]/div/div[2]/div[1]/div[1]/div/div[2]/div/div[1]/div[2]/h2"))
+						"//*[@id=\"__next\"]/main/div[2]/div/div[2]/div[1]/div[1]/div/div[2]/div/div[1]/div[2]/div[1]/h2"))
 				.getText();
 
 		summary = "Não existem estatisitcas para a próxima partida do " + name;
@@ -113,7 +112,7 @@ public class Scrap {
 		waitForIt(15000);
 		new Actions(driver).click(showMoreBtn).perform();
 
-//Achando Oponente		
+//Achando Oponente
 
 		waitForIt(3000);
 
@@ -126,7 +125,8 @@ public class Scrap {
 		while (!buttonFound && attempts < 3) {
 			try {
 				firstOpp = driver
-						.findElement(By.xpath("//*[@id=\"__next\"]/main/div[2]/div[1]/div/div/div[1]/div[1]/bdi"));
+						.findElement(By.xpath("//*[@id=\"__next\"]/main/div[2]/div[1]/div/div/div/div[1]/div[1]/bdi"));
+
 				buttonFound = true;
 			} catch (NoSuchElementException e) {
 				attempts++;
@@ -154,7 +154,7 @@ public class Scrap {
 
 		// abaixar a tela
 		waitForIt(15000);
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 25; i++) {
 			new Actions(driver).keyDown(Keys.ARROW_DOWN).perform();
 		}
 
@@ -175,11 +175,28 @@ public class Scrap {
 				.findElements(By.xpath("//*[@id='__next']/main/div[2]/div[2]/div[1]/div[2]/div[4]/div/div[2]/div[2]"));
 		List<WebElement> fourth = driver
 				.findElements(By.xpath("//*[@id='__next']/main/div[2]/div[2]/div[1]/div[2]/div[4]/div/div[3]/div[2]"));
+		List<WebElement> fith = driver
+				.findElements(By.xpath("//*[@id='__next']/main/div[2]/div[2]/div[1]/div[2]/div[3]/div/div[2]/div[1]/div[2]"));
+		List<WebElement> six = driver
+				.findElements(By.xpath("//*[@id='__next']/main/div[2]/div[2]/div[1]/div[2]/div[3]/div/div[2]/div[2]/div[2]"));
+		List<WebElement> seven = driver
+				.findElements(By.xpath("//*[@id='__next']/main/div[2]/div[2]/div[1]/div[2]/div[4]/div/div[2]/div[1]/div[2]"));
+		List<WebElement> eight = driver
+				.findElements(By.xpath("//*[@id='__next']/main/div[2]/div[2]/div[1]/div[2]/div[5]/div/div[2]/div[1]/div[2]"));
+		List<WebElement> nine = driver
+				.findElements(By.xpath("//*[@id='__next']/main/div[2]/div[2]/div[1]/div[2]/div[3]/div/div[2]/div/div[2]"));
+
+
 
 		list.add(first);
 		list.add(second);
 		list.add(third);
 		list.add(fourth);
+		list.add(fith);
+		list.add(six);
+		list.add(seven);
+		list.add(eight);
+		list.add(nine);
 
 		for (List<WebElement> x : list) {
 			if (!x.isEmpty() && containsIgnoreCaseAndAccent(x.get(0).getText(), homeTeam)
@@ -192,20 +209,20 @@ public class Scrap {
 		list.clear();
 
 		List<WebElement> firstComp = driver.findElements(By.xpath(
-				"//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[1]/div[12]/div[1]/div[2]/div/div[1]/div[1]/a/span"));
+				"//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[1]/div[11]/div[2]/div/span/div/div[1]/div[1]/a/span"));
 		List<WebElement> secondComp = driver.findElements(By.xpath(
-				"//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[1]/div[11]/div[1]/div[2]/div/div[1]/div/a/span"));
-		List<WebElement> thirdComp = driver.findElements(By.xpath(
-				"//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[1]/div[14]/div[1]/div[2]/div/div[1]/div[1]/a/span"));
+				"//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[1]/div[10]/div[2]/div/span/div/div[1]/div/a/span"));
 
 		list.add(firstComp);
 		list.add(secondComp);
-		list.add(thirdComp);
+
+
 		for (List<WebElement> x : list) {
 			if (!x.isEmpty()) {
 				competi = x.get(0).getText();
 			}
 		}
+
 		try {
 			System.out.println(generateMatchSummary(texto, opponent, team, competi));
 			summary = generateMatchSummary(texto, opponent, team, competi);
