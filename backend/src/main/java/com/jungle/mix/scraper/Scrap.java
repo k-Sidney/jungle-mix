@@ -99,7 +99,7 @@ public class Scrap {
 					driver.quit();
 					return;
 				}
-				waitForIt(2000); // Espera 5 segundos antes de tentar novamente
+				waitForIt(5000); // Espera 5 segundos antes de tentar novamente
 			}
 		}
 
@@ -125,8 +125,7 @@ public class Scrap {
 		while (!buttonFound && attempts < 3) {
 			try {
 				firstOpp = driver
-						.findElement(By.xpath("//*[@id=\"__next\"]/main/div[2]/div[1]/div/div/div/div[1]/div[1]/bdi"));
-
+						.findElement(By.xpath("//*[@id=\"__next\"]/main/div[2]/div[1]/div/div/div/div[2]/div[1]/bdi"));
 				buttonFound = true;
 			} catch (NoSuchElementException e) {
 				attempts++;
