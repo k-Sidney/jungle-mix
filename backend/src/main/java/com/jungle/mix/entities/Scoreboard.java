@@ -17,11 +17,8 @@ public class Scoreboard implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
 	private Integer homeScore;
 	private Integer awayScore;
-
-	// Constructors, Getters, Setters, equals(), hashCode()
 
 	public Scoreboard() {
 	}
@@ -29,6 +26,14 @@ public class Scoreboard implements Serializable {
 	public Scoreboard(Integer homeScore, Integer awayScore) {
 		this.homeScore = homeScore;
 		this.awayScore = awayScore;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Integer getHomeScore() {

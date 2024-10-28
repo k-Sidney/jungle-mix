@@ -20,43 +20,43 @@ public class MixApplication {
 
 		Scrap scrapClub = new Scrap();
 
-		// Scrap do Brasileirão
-		ReadAndWrite timesBrasileirao = new ReadAndWrite();
-
-		// Caminho do arquivo
-		String filePath = MixApplication.class.getClassLoader().getResource("TimesBrasileirao.txt").getPath();
-		timesBrasileirao.read(filePath);
-
-		// Impressão dos resultados
-		ArrayList<String> timesENumeros = timesBrasileirao.getTimesENumeros();
-
-		// Loop para scrap dos times no arquivo
-		for (String timeNumero : timesENumeros) {
-			scrapClub.scrap("https://www.sofascore.com/team/football/" + timeNumero);
-			if (scrapClub.getSummary() != null) {
-				timesBrasileirao.write(scrapClub.getSummary());
-			}
-		}
-
-		// Enquanto houver erros no scrap, tentar novamente
-		while (scrapClub.getErrors().size() > 0) {
-			for (int i = 0; i < scrapClub.getErrors().size(); i++) {
-				String erroURL = scrapClub.getErrors().get(i);
-				System.out.println("Erro encontrado: " + erroURL);
-
-				// Tentar novamente o scrap
-				scrapClub.scrap(erroURL);
-				if (scrapClub.getSummary() != null) {
-					timesBrasileirao.write(scrapClub.getSummary());
-				}
-
-				// Se o scrap for bem-sucedido, remover da lista de erros
-				if (scrapClub.getSuccess()) {
-					scrapClub.getErrors().remove(i);
-					System.out.println("Erro removido após sucesso: " + erroURL);
-				}
-			}
-		}
+//		// Scrap do Brasileirão
+//		ReadAndWrite timesBrasileirao = new ReadAndWrite();
+//
+//		// Caminho do arquivo
+//		String filePath = MixApplication.class.getClassLoader().getResource("TimesBrasileirao.txt").getPath();
+//		timesBrasileirao.read(filePath);
+//
+//		// Impressão dos resultados
+//		ArrayList<String> timesENumeros = timesBrasileirao.getTimesENumeros();
+//
+//		// Loop para scrap dos times no arquivo
+//		for (String timeNumero : timesENumeros) {
+//			scrapClub.scrap("https://www.sofascore.com/team/football/" + timeNumero);
+//			if (scrapClub.getSummary() != null) {
+//				timesBrasileirao.write(scrapClub.getSummary());
+//			}
+//		}
+//
+//		// Enquanto houver erros no scrap, tentar novamente
+//		while (scrapClub.getErrors().size() > 0) {
+//			for (int i = 0; i < scrapClub.getErrors().size(); i++) {
+//				String erroURL = scrapClub.getErrors().get(i);
+//				System.out.println("Erro encontrado: " + erroURL);
+//
+//				// Tentar novamente o scrap
+//				scrapClub.scrap(erroURL);
+//				if (scrapClub.getSummary() != null) {
+//					timesBrasileirao.write(scrapClub.getSummary());
+//				}
+//
+//				// Se o scrap for bem-sucedido, remover da lista de erros
+//				if (scrapClub.getSuccess()) {
+//					scrapClub.getErrors().remove(i);
+//					System.out.println("Erro removido após sucesso: " + erroURL);
+//				}
+//			}
+//		}
 
 		// Perguntar se o usuário deseja iniciar o scrap
 		System.out.println("Iniciar o Scrap? (y para sim)");

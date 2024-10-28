@@ -13,6 +13,9 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 
+import java.util.List;
+import jakarta.persistence.OneToMany;
+
 @Entity
 @Table(name = "tb_competition")
 public class Competition implements Serializable {
@@ -29,6 +32,9 @@ public class Competition implements Serializable {
 	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
 	private Instant updatedAt;
 
+	@OneToMany(mappedBy = "competition")
+	private List<Match> matches;
+
 	public Competition() {
 	}
 
@@ -37,6 +43,7 @@ public class Competition implements Serializable {
 		this.name = name;
 	}
 
+	// Getters and Setters
 	public Long getId() {
 		return id;
 	}
@@ -51,6 +58,10 @@ public class Competition implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public List<Match> getMatches() {
+		return matches;
 	}
 
 	public Instant getCreatedAt() {
@@ -87,5 +98,4 @@ public class Competition implements Serializable {
 		Competition other = (Competition) obj;
 		return Objects.equals(id, other.id);
 	}
-
 }

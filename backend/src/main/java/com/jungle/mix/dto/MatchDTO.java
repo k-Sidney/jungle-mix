@@ -1,58 +1,45 @@
-package com.jungle.mix.entities;
+package com.jungle.mix.dto;
 
 import java.io.Serializable;
-import java.util.Objects;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import com.jungle.mix.entities.Club;
+import com.jungle.mix.entities.Competition;
+import com.jungle.mix.entities.Match;
+import com.jungle.mix.entities.Scoreboard;
 
-@Entity
-@Table(name = "tb_match")
-public class Match implements Serializable {
+public class MatchDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
-	@ManyToOne
-	@JoinColumn(name = "home_club_id")
 	private Club homeClub;
-
-	@ManyToOne
-	@JoinColumn(name = "away_club_id")
 	private Club awayClub;
-
-	@ManyToOne
-	@JoinColumn(name = "competition_id")
 	private Competition competition;
-
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "scoreboard_id", referencedColumnName = "id")
-	private Scoreboard scoreboard;
-
+	private Scoreboard scoreBoard;
 	private Integer homeClubWinProbability;
 	private Integer awayClubWinProbability;
 
-	public Match() {
+	public MatchDTO() {
 	}
 
-	public Match(Long id, Club homeClub, Club awayClub, Competition competition, Scoreboard scoreboard,
+	public MatchDTO(Long id, Club homeClub, Club awayClub, Competition competition, Scoreboard scoreBoard,
 			Integer homeClubWinProbability, Integer awayClubWinProbability) {
 		this.id = id;
 		this.homeClub = homeClub;
 		this.awayClub = awayClub;
 		this.competition = competition;
-		this.scoreboard = scoreboard;
+		this.scoreBoard = scoreBoard;
 		this.homeClubWinProbability = homeClubWinProbability;
 		this.awayClubWinProbability = awayClubWinProbability;
+	}
+
+	public MatchDTO(Match entity) {
+		this.id = entity.getId();
+		this.homeClub = entity.getHomeClub();
+		this.awayClub = entity.getAwayClub();
+		this.competition = entity.getCompetition();
+		this.scoreBoard = entity.getScoreboard();
+		this.homeClubWinProbability = entity.getHomeClubWinProbability();
+		this.awayClubWinProbability = entity.getAwayClubWinProbability();
 	}
 
 	public Long getId() {
@@ -87,12 +74,12 @@ public class Match implements Serializable {
 		this.competition = competition;
 	}
 
-	public Scoreboard getScoreboard() {
-		return scoreboard;
+	public Scoreboard getScoreBoard() {
+		return scoreBoard;
 	}
 
-	public void setScoreboard(Scoreboard scoreboard) {
-		this.scoreboard = scoreboard;
+	public void setScoreBoard(Scoreboard scoreBoard) {
+		this.scoreBoard = scoreBoard;
 	}
 
 	public Integer getHomeClubWinProbability() {
@@ -109,23 +96,6 @@ public class Match implements Serializable {
 
 	public void setAwayClubWinProbability(Integer awayClubWinProbability) {
 		this.awayClubWinProbability = awayClubWinProbability;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Match other = (Match) obj;
-		return Objects.equals(id, other.id);
 	}
 
 }
