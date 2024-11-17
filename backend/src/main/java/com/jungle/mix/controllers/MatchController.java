@@ -16,37 +16,44 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.jungle.mix.dto.ScoreboardDTO;
-import com.jungle.mix.services.ScoreboardService;
+import com.jungle.mix.dto.MatchDTO;
+import com.jungle.mix.services.MatchService;
 
 @RestController
 @RequestMapping(value = "/matches")
 public class MatchController {
 
 	@Autowired
-	private ScoreboardService service;
+	private MatchService service;
 
 	@GetMapping
-	public ResponseEntity<Page<ScoreboardDTO>> findAll(Pageable pageable) {
-		Page<ScoreboardDTO> list = service.findAllPaged(pageable);
+	public ResponseEntity<Page<MatchDTO>> findAll(Pageable pageable) {
+		Page<MatchDTO> list = service.findAllPaged(pageable);
 		return ResponseEntity.ok().body(list);
 	}
 
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<ScoreboardDTO> findById(@PathVariable Long id) {
-		ScoreboardDTO dto = service.findById(id);
+	public ResponseEntity<MatchDTO> findById(@PathVariable Long id) {
+		MatchDTO dto = service.findById(id);
 		return ResponseEntity.ok().body(dto);
 	}
 
 	@PostMapping
-	public ResponseEntity<ScoreboardDTO> insert(@RequestBody ScoreboardDTO dto) {
+	public ResponseEntity<MatchDTO> insert(@RequestBody MatchDTO dto) {
 		dto = service.insert(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
 		return ResponseEntity.created(uri).body(dto);
 	}
 
+	@PostMapping("create")
+	public ResponseEntity<MatchDTO> createMatch(MatchDTO dto) {
+		dto = service.matchCreation();
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
+		return ResponseEntity.created(uri).body(dto);
+	}
+
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<ScoreboardDTO> update(@PathVariable Long id, @RequestBody ScoreboardDTO dto) {
+	public ResponseEntity<MatchDTO> update(@PathVariable Long id, @RequestBody MatchDTO dto) {
 		dto = service.update(id, dto);
 		return ResponseEntity.ok().body(dto);
 	}

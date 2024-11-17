@@ -1,13 +1,11 @@
 package com.jungle.mix;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.jungle.mix.scraper.ReadAndWrite;
 import com.jungle.mix.scraper.Scrap;
 
 @SpringBootApplication
@@ -69,6 +67,6 @@ public class MixApplication {
 		}
 
 		// Exemplo para ver o scrap de um time específico
-		scrapClub.scrap("https://www.sofascore.com/pt/time/futebol/vasco-da-gama/1974");
+		scrapClub.scrap("https://www.sofascore.com/pt/time/futebol/athletico/1967");
 	}
 }

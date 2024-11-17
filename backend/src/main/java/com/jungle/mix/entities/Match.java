@@ -1,16 +1,16 @@
 package com.jungle.mix.entities;
 
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -34,9 +34,8 @@ public class Match implements Serializable {
 	@JoinColumn(name = "competition_id")
 	private Competition competition;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "scoreboard_id", referencedColumnName = "id")
-	private Scoreboard scoreboard;
+	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
+	private Instant date;
 
 	private Integer homeClubWinProbability;
 	private Integer awayClubWinProbability;
@@ -44,13 +43,13 @@ public class Match implements Serializable {
 	public Match() {
 	}
 
-	public Match(Long id, Club homeClub, Club awayClub, Competition competition, Scoreboard scoreboard,
+	public Match(Long id, Club homeClub, Club awayClub, Competition competition, Instant date,
 			Integer homeClubWinProbability, Integer awayClubWinProbability) {
 		this.id = id;
 		this.homeClub = homeClub;
 		this.awayClub = awayClub;
 		this.competition = competition;
-		this.scoreboard = scoreboard;
+		this.date = date;
 		this.homeClubWinProbability = homeClubWinProbability;
 		this.awayClubWinProbability = awayClubWinProbability;
 	}
@@ -87,12 +86,12 @@ public class Match implements Serializable {
 		this.competition = competition;
 	}
 
-	public Scoreboard getScoreboard() {
-		return scoreboard;
+	public Instant getDate() {
+		return date;
 	}
 
-	public void setScoreboard(Scoreboard scoreboard) {
-		this.scoreboard = scoreboard;
+	public void setDate(Instant date) {
+		this.date = date;
 	}
 
 	public Integer getHomeClubWinProbability() {

@@ -1,7 +1,9 @@
 package com.jungle.mix.services;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -66,5 +68,23 @@ public class CompetitionService {
 			throw new DatabaseException("Integrity failure");
 		}
 
+	}
+
+	private final LevenshteinDistance levenshteinDistance = new LevenshteinDistance();
+
+	public Optional<Competition> findClosestCompetitionByName(String competitionName) {
+		List<Competition> competitions = repository.findAll();
+		Competition closestMatch = null;
+		int minDistance = Integer.MAX_VALUE;
+
+		for (Competition competition : competitions) {
+			int distance = levenshteinDistance.apply(competitionName, competition.getName());
+			if (distance < minDistance) {
+				minDistance = distance;
+				closestMatch = competition;
+			}
+		}
+
+		return Optional.ofNullable(closestMatch);
 	}
 }

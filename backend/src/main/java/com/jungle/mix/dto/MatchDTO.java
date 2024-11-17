@@ -1,43 +1,30 @@
 package com.jungle.mix.dto;
 
 import java.io.Serializable;
+import java.time.Instant;
 
-import com.jungle.mix.entities.Club;
-import com.jungle.mix.entities.Competition;
 import com.jungle.mix.entities.Match;
-import com.jungle.mix.entities.Scoreboard;
 
 public class MatchDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
-	private Club homeClub;
-	private Club awayClub;
-	private Competition competition;
-	private Scoreboard scoreBoard;
+	private ClubDTO homeClub;
+	private ClubDTO awayClub;
+	private CompetitionDTO competition;
+	private Instant date;
 	private Integer homeClubWinProbability;
 	private Integer awayClubWinProbability;
 
 	public MatchDTO() {
 	}
 
-	public MatchDTO(Long id, Club homeClub, Club awayClub, Competition competition, Scoreboard scoreBoard,
-			Integer homeClubWinProbability, Integer awayClubWinProbability) {
-		this.id = id;
-		this.homeClub = homeClub;
-		this.awayClub = awayClub;
-		this.competition = competition;
-		this.scoreBoard = scoreBoard;
-		this.homeClubWinProbability = homeClubWinProbability;
-		this.awayClubWinProbability = awayClubWinProbability;
-	}
-
 	public MatchDTO(Match entity) {
 		this.id = entity.getId();
-		this.homeClub = entity.getHomeClub();
-		this.awayClub = entity.getAwayClub();
-		this.competition = entity.getCompetition();
-		this.scoreBoard = entity.getScoreboard();
+		this.homeClub = new ClubDTO(entity.getHomeClub());
+		this.awayClub = new ClubDTO(entity.getAwayClub());
+		this.competition = new CompetitionDTO(entity.getCompetition());
+		this.date = entity.getDate();
 		this.homeClubWinProbability = entity.getHomeClubWinProbability();
 		this.awayClubWinProbability = entity.getAwayClubWinProbability();
 	}
@@ -50,36 +37,36 @@ public class MatchDTO implements Serializable {
 		this.id = id;
 	}
 
-	public Club getHomeClub() {
+	public ClubDTO getHomeClub() {
 		return homeClub;
 	}
 
-	public void setHomeClub(Club homeClub) {
+	public void setHomeClub(ClubDTO homeClub) {
 		this.homeClub = homeClub;
 	}
 
-	public Club getAwayClub() {
+	public ClubDTO getAwayClub() {
 		return awayClub;
 	}
 
-	public void setAwayClub(Club awayClub) {
+	public void setAwayClub(ClubDTO awayClub) {
 		this.awayClub = awayClub;
 	}
 
-	public Competition getCompetition() {
+	public CompetitionDTO getCompetition() {
 		return competition;
 	}
 
-	public void setCompetition(Competition competition) {
+	public void setCompetition(CompetitionDTO competition) {
 		this.competition = competition;
 	}
 
-	public Scoreboard getScoreBoard() {
-		return scoreBoard;
+	public Instant getDate() {
+		return date;
 	}
 
-	public void setScoreBoard(Scoreboard scoreBoard) {
-		this.scoreBoard = scoreBoard;
+	public void setDate(Instant date) {
+		this.date = date;
 	}
 
 	public Integer getHomeClubWinProbability() {

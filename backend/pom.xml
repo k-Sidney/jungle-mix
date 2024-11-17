@@ -124,6 +124,13 @@
 			<scope>provided</scope>
 		</dependency>
 
+		<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-text</artifactId>
+    <version>1.9</version> <!-- Certifique-se de que a versão é compatível -->
+</dependency>
+
+
 
 	</dependencies>
 

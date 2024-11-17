@@ -14,13 +14,68 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class Scrap {
 
 	String summary = null;
 	List<String> errors = new ArrayList<>();
 	Boolean success = false;
+	private String homeTeamName;
+	private String awayTeamName;
+	private String competitionName;
+	private String date;
+	private String homeOdd;
+	private String awayOdd;
+
+	public String getHomeOdd() {
+		return homeOdd;
+	}
+
+	public void setHomeOdd(String homeOdd) {
+		this.homeOdd = homeOdd;
+	}
+
+	public String getAwayOdd() {
+		return awayOdd;
+	}
+
+	public void setAwayOdd(String awayOdd) {
+		this.awayOdd = awayOdd;
+	}
+
+	public String getHomeTeamName() {
+		return homeTeamName;
+	}
+
+	public void setHomeTeamName(String homeTeamName) {
+		this.homeTeamName = homeTeamName;
+	}
+
+	public String getAwayTeamName() {
+		return awayTeamName;
+	}
+
+	public void setAwayTeamName(String awayTeamName) {
+		this.awayTeamName = awayTeamName;
+	}
+
+	public String getCompetitionName() {
+		return competitionName;
+	}
+
+	public void setCompetitionName(String competitionName) {
+		this.competitionName = competitionName;
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
 
 	public Boolean getSuccess() {
 		return success;
@@ -72,25 +127,24 @@ public class Scrap {
 
 		homeTeam = homeTeam.substring(startIndex, endIndex);
 
-		String name = driver
-				.findElement(By.xpath(
-						"//*[@id=\"__next\"]/main/div[2]/div/div[2]/div[1]/div[1]/div/div[2]/div/div[1]/div[2]/div[1]/h2"))
+		String homeTeamName = driver.findElement(By.xpath(
+				"//*[@id=\"__next\"]/main/div[2]/div/div[2]/div[1]/div[1]/div/div[2]/div/div[1]/div[2]/div[1]/h2"))
 				.getText();
 
-		summary = "Não existem estatisitcas para a próxima partida do " + name;
+		summary = "Não existem estatisitcas para a próxima partida do " + homeTeamName;
 
 		WebElement showMoreBtn = null;
 		boolean buttonFound = false;
 		int attempts = 0;
 
-		while (!buttonFound && attempts < 12) {
+		while (!buttonFound && attempts < 16) {
 			try {
 				showMoreBtn = driver.findElement(By.xpath(
 						"//*[@id='__next']/main/div[2]/div/div[2]/div[1]/div[3]/div/div[2]/div[2]/div/div[1]/div/div/a/button"));
 				buttonFound = true;
 			} catch (NoSuchElementException e) {
 				attempts++;
-				if (attempts == 12) {
+				if (attempts == 16) {
 					System.out.println("Botão 'Show More' não encontrado após 12 tentativas " + homeTeam);
 					summary = null;
 					System.out.println(driver.getCurrentUrl());
@@ -140,16 +194,15 @@ public class Scrap {
 
 		opponentText = firstOpp.getText();
 
+		System.out.println(opponentText);
+
 		String[] opponentWords = opponentText.split("-");
 		String opponent, team = "";
+		team = opponentWords[0].substring(0, opponentWords[0].length() - 1);
+		opponent = opponentWords[1].substring(1);
 
-		if (opponentWords[0].substring(0, opponentWords[0].length() - 1).equals(name)) {
-			opponent = opponentWords[1].substring(1);
-			team = opponentWords[0].substring(0, opponentWords[0].length() - 1);
-		} else {
-			opponent = opponentWords[0].substring(0, opponentWords[0].length() - 1);
-			team = opponentWords[1].substring(1);
-		}
+		System.out.println("Time no começo: " + team);
+		System.out.println("Oponente no começo: " + opponent);
 
 		// abaixar a tela
 		waitForIt(15000);
@@ -157,35 +210,52 @@ public class Scrap {
 			new Actions(driver).keyDown(Keys.ARROW_DOWN).perform();
 		}
 
+		String matchDate = driver
+				.findElements(By.xpath(
+						"//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[1]/div[9]/div/div/div[1]/div/span[2]"))
+				.get(0).getText();
+
+		System.out.println("Data: " + matchDate);
+
 		String competi = null;
 
 		// Imprimindo o texto do time que esta no link
 
-		String texto = "Não existem estatísticas para a próxima partida do " + name;
-
+		String homeText = "Não existem estatísticas para a próxima partida do time de casa";
+		String awayText = "Não existem estatísticas para a próxima partida do clube que esta jogando fora de casa ";
 		waitForIt(10000);
 
 		List<List<WebElement>> list = new ArrayList<>();
-		List<WebElement> first = driver
-				.findElements(By.xpath("//*[@id='__next']/main/div[2]/div[2]/div[1]/div[2]/div[5]/div/div[2]/div[2]"));
-		List<WebElement> second = driver
-				.findElements(By.xpath("//*[@id='__next']/main/div[2]/div[2]/div[1]/div[2]/div[5]/div/div[3]/div[2]"));
-		List<WebElement> third = driver
-				.findElements(By.xpath("//*[@id='__next']/main/div[2]/div[2]/div[1]/div[2]/div[4]/div/div[2]/div[2]"));
-		List<WebElement> fourth = driver
-				.findElements(By.xpath("//*[@id='__next']/main/div[2]/div[2]/div[1]/div[2]/div[4]/div/div[3]/div[2]"));
-		List<WebElement> fith = driver
-				.findElements(By.xpath("//*[@id='__next']/main/div[2]/div[2]/div[1]/div[2]/div[3]/div/div[2]/div[1]/div[2]"));
-		List<WebElement> six = driver
-				.findElements(By.xpath("//*[@id='__next']/main/div[2]/div[2]/div[1]/div[2]/div[3]/div/div[2]/div[2]/div[2]"));
-		List<WebElement> seven = driver
-				.findElements(By.xpath("//*[@id='__next']/main/div[2]/div[2]/div[1]/div[2]/div[4]/div/div[2]/div[1]/div[2]"));
-		List<WebElement> eight = driver
-				.findElements(By.xpath("//*[@id='__next']/main/div[2]/div[2]/div[1]/div[2]/div[5]/div/div[2]/div[1]/div[2]"));
-		List<WebElement> nine = driver
-				.findElements(By.xpath("//*[@id='__next']/main/div[2]/div[2]/div[1]/div[2]/div[3]/div/div[2]/div/div[2]"));
-
-
+		List<WebElement> first = driver.findElements(
+				By.xpath("//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[2]/div[5]/div/div[2]/div[2]"));
+		List<WebElement> second = driver.findElements(
+				By.xpath("//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[2]/div[5]/div/div[3]/div[2]"));
+		List<WebElement> third = driver.findElements(
+				By.xpath("//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[2]/div[4]/div/div[2]/div[2]"));
+		List<WebElement> fourth = driver.findElements(
+				By.xpath("//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[2]/div[4]/div/div[3]/div[2]"));
+		List<WebElement> fith = driver.findElements(
+				By.xpath("//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[2]/div[3]/div/div[2]/div[1]/div[2]"));
+		List<WebElement> six = driver.findElements(
+				By.xpath("//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[2]/div[3]/div/div[2]/div[2]/div[2]"));
+		List<WebElement> seven = driver.findElements(
+				By.xpath("//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[2]/div[4]/div/div[2]/div[1]/div[2]"));
+		List<WebElement> eight = driver.findElements(
+				By.xpath("//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[2]/div[5]/div/div[2]/div[1]/div[2]"));
+		List<WebElement> nine = driver.findElements(
+				By.xpath("//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[2]/div[3]/div/div[2]/div/div[2]"));
+		List<WebElement> ten = driver.findElements(
+				By.xpath("//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[2]/div[4]/div/div/div/div[2]"));
+		List<WebElement> eleven = driver.findElements(
+				By.xpath("//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[2]/div[5]/div/div/div[2]/div[2]"));
+		List<WebElement> twelve = driver.findElements(
+				By.xpath("//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[2]/div[4]/div/div/div[1]/div[2]"));
+		List<WebElement> thirteen = driver.findElements(
+				By.xpath("//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[2]/div[5]/div/div/div[1]/div[2]"));
+		List<WebElement> fourteen = driver.findElements(
+				By.xpath("//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[2]/div[5]/div/div/div[2]/div[2]"));
+		List<WebElement> fithteen = driver.findElements(
+				By.xpath("//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[2]/div[4]/div/div/div[2]/div[2]"));
 
 		list.add(first);
 		list.add(second);
@@ -196,12 +266,33 @@ public class Scrap {
 		list.add(seven);
 		list.add(eight);
 		list.add(nine);
+		list.add(ten);
+		list.add(eleven);
+		list.add(twelve);
+		list.add(thirteen);
+		list.add(fourteen);
+		list.add(fithteen);
+
+		System.out.println("homeTeamName:" + homeTeamName);
+		System.out.println("opponent:" + opponent);
 
 		for (List<WebElement> x : list) {
-			if (!x.isEmpty() && containsIgnoreCaseAndAccent(x.get(0).getText(), homeTeam)
-					|| !x.isEmpty() && containsIgnoreCaseAndAccent(x.get(0).getText(), name)) {
-				texto = x.get(0).getText();
-				buttonFound = true;
+			if (!x.isEmpty()) {
+				System.out.println("Texto no for: " + x.get(0).getText());
+				if (containsIgnoreCaseAndAccent(x.get(0).getText(), team)) {
+					homeText = x.get(0).getText();
+					System.out.println("Contem deu certo!");
+				}
+			}
+		}
+
+		for (List<WebElement> x : list) {
+			if (!x.isEmpty()) {
+				System.out.println("Texto no for: " + x.get(0).getText());
+				if (containsIgnoreCaseAndAccent(x.get(0).getText(), opponent)) {
+					awayText = x.get(0).getText();
+					System.out.println("Contem deu certo!");
+				}
 			}
 		}
 
@@ -211,10 +302,15 @@ public class Scrap {
 				"//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[1]/div[11]/div[2]/div/span/div/div[1]/div[1]/a/span"));
 		List<WebElement> secondComp = driver.findElements(By.xpath(
 				"//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[1]/div[10]/div[2]/div/span/div/div[1]/div/a/span"));
+		List<WebElement> thirdComp = driver.findElements(By.xpath(
+				"//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[1]/div[11]/div/div/span/div/div[1]/div[1]/a/span"));
+		List<WebElement> fourthComp = driver.findElements(By.xpath(
+				"//*[@id=\"__next\"]/main/div[2]/div[2]/div[1]/div[1]/div[10]/div/div/span/div/div[1]/div[1]/a/span"));
 
 		list.add(firstComp);
 		list.add(secondComp);
-
+		list.add(thirdComp);
+		list.add(fourthComp);
 
 		for (List<WebElement> x : list) {
 			if (!x.isEmpty()) {
@@ -223,14 +319,57 @@ public class Scrap {
 		}
 
 		try {
-			System.out.println(generateMatchSummary(texto, opponent, team, competi));
-			summary = generateMatchSummary(texto, opponent, team, competi);
+			System.out.println(generateMatchSummary(homeText, opponent, team, competi));
+			summary = generateMatchSummary(homeText, opponent, team, competi);
 			success = true;
 		} catch (IllegalArgumentException e) {
-			System.out.println(texto);
+			System.out.println(homeText);
 			driver.quit();
 			return;
 		}
+
+		String[] homeTextWords = homeText.split("\\s+");
+		String[] awayTextWords = awayText.split("\\s+");
+		System.out.println("homeText: " + homeText);
+		System.out.println("awayText: " + awayText);
+		System.out.println("team : " + team);
+		System.out.println("opponent: " + opponent);
+
+		if (homeTextWords.length < 17) {
+			throw new IllegalArgumentException("O texto fornecido não contém palavras suficientes para processar.");
+		}
+
+		int n = 16;
+		String homeOdd = homeTextWords[n];
+		String awayOdd = awayTextWords[n];
+
+		while (!homeOdd.contains("%")) {
+			n++;
+			if (n >= homeTextWords.length) {
+				throw new IllegalArgumentException("Não foi possível encontrar uma odd no texto fornecido.");
+
+			}
+			homeOdd = homeTextWords[n];
+		}
+		n = 16;
+		while (!awayOdd.contains("%")) {
+			n++;
+			if (n >= awayTextWords.length) {
+				throw new IllegalArgumentException("Não foi possível encontrar uma odd no texto fornecido.");
+
+			}
+			awayOdd = awayTextWords[n];
+		}
+
+		this.homeTeamName = team;
+		this.awayTeamName = opponent;
+		this.competitionName = competi;
+		this.date = matchDate;
+		this.homeOdd = homeOdd;
+		this.awayOdd = awayOdd;
+
+		System.out.println("homeOdd: " + homeOdd);
+		System.out.println("awayOdd: " + awayOdd);
 
 		driver.quit();
 	}
@@ -285,6 +424,11 @@ public class Scrap {
 		sb.append(opponent);
 		sb.append(" na próxima partida da competição: ");
 		sb.append(competi);
+
+		System.out.println("Time: " + team);
+		System.out.println("Oponente: " + opponent);
+		System.out.println("competi: " + competi);
+		System.out.println("odd: " + odd);
 
 		return sb.toString();
 	}
